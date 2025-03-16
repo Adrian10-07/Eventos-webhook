@@ -5,6 +5,8 @@ import (
 	"Eventos/src/core"
 	"log"
 	"strconv"
+	"time"
+	"fmt"
 )
 
 type MySQLEventoRepository struct {
@@ -41,9 +43,28 @@ func (r *MySQLEventoRepository) ObtenerTodos() ([]domain.Evento, error) {
 	var eventos []domain.Evento
 	for rows.Next() {
 		var evento domain.Evento
-		if err := rows.Scan(&evento.ID, &evento.TipoSensor, &evento.Valor, &evento.Timestamp, &evento.CreadoEn); err != nil {
+		var timestampBytes, creadoEnBytes []uint8 // Variables temporales para almacenar valores binarios
+
+		// Escanear valores en las variables temporales
+		if err := rows.Scan(&evento.ID, &evento.TipoSensor, &evento.Valor, &timestampBytes, &creadoEnBytes); err != nil {
 			return nil, err
 		}
+
+		// Convertir []uint8 a string
+		timestampStr := string(timestampBytes)
+		creadoEnStr := string(creadoEnBytes)
+
+		// Convertir las cadenas a time.Time
+		evento.Timestamp, err = time.Parse("2006-01-02 15:04:05", timestampStr)
+		if err != nil {
+			return nil, fmt.Errorf("error al convertir timestamp: %v", err)
+		}
+
+		evento.CreadoEn, err = time.Parse("2006-01-02 15:04:05", creadoEnStr)
+		if err != nil {
+			return nil, fmt.Errorf("error al convertir creado_en: %v", err)
+		}
+
 		eventos = append(eventos, evento)
 	}
 	return eventos, nil
