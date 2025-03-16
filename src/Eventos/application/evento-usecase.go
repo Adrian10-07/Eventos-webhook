@@ -1,31 +1,15 @@
 package application
 
-import (
-	"Eventos/src/Eventos/domain"
-	"fmt"
-	"time"
-)
+import "Eventos/src/Eventos/domain"
 
-type ServicioEvento struct {
-	repo domain.IEvento 
+type CreateEvento struct {
+	repo domain.IEvento
 }
 
-func NuevoServicioEvento(repo domain.IEvento) *ServicioEvento {
-	return &ServicioEvento{repo}
+func NewCreateEvento(repo domain.IEvento) *CreateEvento {
+	return &CreateEvento{repo: repo}
 }
 
-func (s *ServicioEvento) CrearEvento(tipoSensor string, valor float64) (*domain.Evento, error) {
-	evento := &domain.Evento{
-		TipoSensor: tipoSensor,
-		Valor:      valor,
-		Timestamp:  time.Now(),
-		CriadoEn:   time.Now(),
-	}
-
-	err := s.repo.Guardar(evento)
-	if err != nil {
-		return nil, fmt.Errorf("error al guardar evento: %v", err)
-	}
-
-	return evento, nil
+func (ce *CreateEvento) Execute(e domain.Evento) error {
+	return ce.repo.Guardar(&e)
 }

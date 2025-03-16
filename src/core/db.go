@@ -5,6 +5,7 @@ import (
 	"database/sql"
 	"fmt"
 	"log"
+	"os"
 
 	"github.com/joho/godotenv"
 	_ "github.com/go-sql-driver/mysql"
@@ -19,11 +20,12 @@ func GetDBPool() *Conn_MySQL {
 	_ = godotenv.Load()
 
 	// llmar variables de entorno
-	dbHost:="localhost"
-dbUser:="root"
-dbPass:="adrian0710200512#12#"
-dbSchema:= "Sensores"
-dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", dbUser, dbPass, dbHost, dbSchema)
+	dbHost := os.Getenv("DB_HOST")
+	dbUser := os.Getenv("DB_USER")
+	dbPass := os.Getenv("DB_PASS")
+	dbSchema := os.Getenv("DB_SCHEMA")
+
+	dsn := fmt.Sprintf("%s:%s@tcp(%s:3306)/%s", dbUser, dbPass, dbHost, dbSchema)
 	db, err := sql.Open("mysql", dsn)
 	if err != nil {
 		log.Fatalf("Error al abrir la base de datos: %v", err)
