@@ -16,7 +16,7 @@ func GetEventosHandler(c *gin.Context) {
 	// Obtener eventos
 	eventos, err := useCase.Execute()
 	if err != nil {
-		log.Printf("Error al obtener eventos: %v", err)  // 🛠 Agregamos log detallado
+		log.Printf("Error al obtener eventos: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Error al obtener los eventos", "detalle": err.Error()})
 		return
 	}

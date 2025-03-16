@@ -10,6 +10,5 @@ func SetupRoutes(router *gin.Engine) {
 	{
 		eventos.POST("/", controllers.CreateEventoHandler) // Crear un nuevo evento
 		eventos.GET("/", controllers.GetEventosHandler) // Obtener todos los eventos
-		// Si necesitas más rutas para actualizar, eliminar, etc. puedes agregarlas aquí
 	}
 }
